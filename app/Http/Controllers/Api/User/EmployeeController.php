@@ -6,8 +6,13 @@ use App\Core\Controller;
 use App\Http\Requests\Api\User\EmployeeController\CreateRequest;
 use App\Http\Requests\Api\User\EmployeeController\GetAllRequest;
 use App\Http\Requests\Api\User\EmployeeController\GetAllWithDevicesRequest;
+use App\Http\Requests\Api\User\EmployeeController\GetByIdWithDevicesRequest;
 use App\Http\Requests\Api\User\EmployeeController\GetByIdRequest;
 use App\Http\Requests\Api\User\EmployeeController\SetDevicesRequest;
+use App\Http\Requests\Api\User\EmployeeController\RemoveDevicesRequest;
+use App\Http\Requests\Api\User\EmployeeController\DeleteRequest;
+use App\Http\Requests\Api\User\EmployeeController\DeleteByOtsIdRequest;
+use App\Http\Requests\Api\User\EmployeeController\ReActivateByOtsIdRequest;
 use App\Interfaces\Eloquent\IEmployeeService;
 use App\Traits\Response;
 
@@ -21,7 +26,7 @@ class EmployeeController extends Controller
     private $employeeService;
 
     /**
-     * @var $jobDepartmentService
+     * @var IEmployeeService $employeeService
      */
     public function __construct(IEmployeeService $employeeService)
     {
@@ -54,6 +59,28 @@ class EmployeeController extends Controller
     public function getAllWithDevices(GetAllWithDevicesRequest $request)
     {
         $getAllWorkersResponse = $this->employeeService->getAllWithDevices();
+        if ($getAllWorkersResponse->isSuccess()) {
+            return $this->success(
+                $getAllWorkersResponse->getMessage(),
+                $getAllWorkersResponse->getData(),
+                $getAllWorkersResponse->getStatusCode()
+            );
+        } else {
+            return $this->error(
+                $getAllWorkersResponse->getMessage(),
+                $getAllWorkersResponse->getStatusCode()
+            );
+        }
+    }
+
+    /**
+     * @param GetByIdWithDevicesRequest $request
+     */
+    public function getByIdWithDevices(GetByIdWithDevicesRequest $request)
+    {
+        $getAllWorkersResponse = $this->employeeService->getByIdWithDevices(
+            $request->id
+        );
         if ($getAllWorkersResponse->isSuccess()) {
             return $this->success(
                 $getAllWorkersResponse->getMessage(),
@@ -133,6 +160,96 @@ class EmployeeController extends Controller
             return $this->error(
                 $createResponse->getMessage(),
                 $createResponse->getStatusCode()
+            );
+        }
+    }
+
+    /**
+     * @param RemoveDevicesRequest $request
+     */
+    public function removeDevices(RemoveDevicesRequest $request)
+    {
+        $createResponse = $this->employeeService->removeDevices(
+            $request->user()->id,
+            $request->employeeId,
+            $request->deviceIds
+        );
+        if ($createResponse->isSuccess()) {
+            return $this->success(
+                $createResponse->getMessage(),
+                $createResponse->getData(),
+                $createResponse->getStatusCode()
+            );
+        } else {
+            return $this->error(
+                $createResponse->getMessage(),
+                $createResponse->getStatusCode()
+            );
+        }
+    }
+
+    /**
+     * @param DeleteRequest $request
+     */
+    public function delete(DeleteRequest $request)
+    {
+        $response = $this->employeeService->delete(
+            $request->id
+        );
+        if ($response->isSuccess()) {
+            return $this->success(
+                $response->getMessage(),
+                $response->getData(),
+                $response->getStatusCode()
+            );
+        } else {
+            return $this->error(
+                $response->getMessage(),
+                $response->getStatusCode()
+            );
+        }
+    }
+
+    /**
+     * @param DeleteByOtsIdRequest $request
+     */
+    public function deleteByOtsId(DeleteByOtsIdRequest $request)
+    {
+        $response = $this->employeeService->deleteByOtsId(
+            $request->otsId
+        );
+        if ($response->isSuccess()) {
+            return $this->success(
+                $response->getMessage(),
+                $response->getData(),
+                $response->getStatusCode()
+            );
+        } else {
+            return $this->error(
+                $response->getMessage(),
+                $response->getStatusCode()
+            );
+        }
+    }
+
+    /**
+     * @param ReActivateByOtsIdRequest $request
+     */
+    public function reActivateByOtsId(ReActivateByOtsIdRequest $request)
+    {
+        $response = $this->employeeService->reActivateByOtsId(
+            $request->otsId
+        );
+        if ($response->isSuccess()) {
+            return $this->success(
+                $response->getMessage(),
+                $response->getData(),
+                $response->getStatusCode()
+            );
+        } else {
+            return $this->error(
+                $response->getMessage(),
+                $response->getStatusCode()
             );
         }
     }

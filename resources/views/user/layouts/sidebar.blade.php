@@ -30,7 +30,7 @@
                         <span class="menu-title">Personel Listesi</span>
                     </span>
                 </a>
-                <a href="{{ route('user.web.inventory.device') }}" class="menu-item {{ request()->segment(3) == 'device' ? 'show' : '' }}">
+                <a href="{{ route('user.web.inventory.device.index') }}" class="menu-item {{ request()->segment(3) == 'device' ? 'show' : '' }}">
                     <span class="menu-link">
                         <span class="menu-icon">
                             <span class="svg-icon svg-icon-1">

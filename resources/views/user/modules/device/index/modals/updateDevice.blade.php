@@ -1,4 +1,4 @@
-<div class="modal fade show" id="CreateDeviceModal" tabindex="-1" aria-modal="true" role="dialog" data-bs-backdrop="static">
+<div class="modal fade show" id="UpdateDeviceModal" tabindex="-1" aria-modal="true" role="dialog" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered mw-800px">
         <div class="modal-content rounded">
             <div class="modal-header pb-0 border-0 justify-content-end">
@@ -14,93 +14,114 @@
             <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
                 <div class="form fv-plugins-bootstrap5 fv-plugins-framework">
                     <div class="mb-13 text-center">
-                        <h1 class="mb-3">Cihaz Oluştur</h1>
+                        <h1 class="mb-3">Cihaz Güncelle</h1>
                     </div>
                     <div class="d-flex flex-column mb-8 fv-row fv-plugins-icon-container">
+                        <input type="hidden" id="update_device_id">
                         <div class="row mb-5">
                             <div class="col-xl-3 mt-3">
-                                <label for="create_device_employee_id" class="font-weight-bolder">Personel</label>
+                                <label for="update_device_employee_id" class="font-weight-bolder">Personel</label>
                             </div>
                             <div class="col-xl-9">
                                 <div class="form-group">
-                                    <select id="create_device_employee_id" class="form-select form-select-solid select2Input" data-control="select2" data-placeholder="Personel"></select>
+                                    <select id="update_device_employee_id" class="form-select form-select-solid select2Input" data-control="select2" data-placeholder="Personel"></select>
                                 </div>
                             </div>
                         </div>
                         <div class="row mb-5">
                             <div class="col-xl-3 mt-3">
-                                <label for="create_device_category_id" class="font-weight-bolder">Kategori</label>
+                                <label for="update_device_category_id" class="font-weight-bolder">Kategori</label>
                             </div>
                             <div class="col-xl-9">
                                 <div class="form-group">
-                                    <select id="create_device_category_id" class="form-select form-select-solid select2Input" data-control="select2" data-placeholder="Kategori"></select>
+                                    <select id="update_device_category_id" class="form-select form-select-solid select2Input" data-control="select2" data-placeholder="Kategori"></select>
                                 </div>
                             </div>
                         </div>
                         <div class="row mb-5">
                             <div class="col-xl-3 mt-3">
-                                <label for="create_device_status_id" class="font-weight-bolder">Cihaz Durumu</label>
+                                <label for="update_device_status_id" class="font-weight-bolder">Cihaz Durumu</label>
                             </div>
                             <div class="col-xl-9">
                                 <div class="form-group">
-                                    <select id="create_device_status_id" class="form-select form-select-solid select2Input" data-control="select2" data-placeholder="Cihaz Durumu"></select>
+                                    <select id="update_device_status_id" class="form-select form-select-solid select2Input" data-control="select2" data-placeholder="Cihaz Durumu"></select>
                                 </div>
                             </div>
                         </div>
                         <div class="row mb-5">
                             <div class="col-xl-3 mt-3">
-                                <label for="create_device_name" class="font-weight-bolder">Cihaz Adı</label>
+                                <label for="update_device_package_id" class="font-weight-bolder">Cihaz Grubu</label>
                             </div>
                             <div class="col-xl-9">
                                 <div class="form-group">
-                                    <input id="create_device_name" type="text" class="form-control form-control-solid">
+                                    <select id="update_device_package_id" class="form-select form-select-solid select2Input" data-control="select2" data-placeholder="Cihaz Durumu"></select>
                                 </div>
                             </div>
                         </div>
                         <div class="row mb-5">
                             <div class="col-xl-3 mt-3">
-                                <label for="create_device_brand" class="font-weight-bolder">Marka</label>
+                                <label for="update_device_name" class="font-weight-bolder">Cihaz Adı</label>
                             </div>
                             <div class="col-xl-9">
                                 <div class="form-group">
-                                    <input id="create_device_brand" type="text" class="form-control form-control-solid">
+                                    <input id="update_device_name" type="text" class="form-control form-control-solid deviceUpdateInput">
                                 </div>
                             </div>
                         </div>
                         <div class="row mb-5">
                             <div class="col-xl-3 mt-3">
-                                <label for="create_device_model" class="font-weight-bolder">Model</label>
+                                <label for="update_device_brand" class="font-weight-bolder">Marka</label>
                             </div>
                             <div class="col-xl-9">
                                 <div class="form-group">
-                                    <input id="create_device_model" type="text" class="form-control form-control-solid">
+                                    <input id="update_device_brand" type="text" class="form-control form-control-solid deviceUpdateInput">
                                 </div>
                             </div>
                         </div>
                         <div class="row mb-5">
                             <div class="col-xl-3 mt-3">
-                                <label for="create_device_serial_number" class="font-weight-bolder">Seri No</label>
+                                <label for="update_device_model" class="font-weight-bolder">Model</label>
                             </div>
                             <div class="col-xl-9">
                                 <div class="form-group">
-                                    <input id="create_device_serial_number" type="text" class="form-control form-control-solid">
+                                    <input id="update_device_model" type="text" class="form-control form-control-solid deviceUpdateInput">
                                 </div>
                             </div>
                         </div>
                         <div class="row mb-5">
                             <div class="col-xl-3 mt-3">
-                                <label for="create_device_ip_address" class="font-weight-bolder">IP Adresi</label>
+                                <label for="update_device_serial_number" class="font-weight-bolder">Seri No</label>
                             </div>
                             <div class="col-xl-9">
                                 <div class="form-group">
-                                    <input id="create_device_ip_address" type="text" class="form-control form-control-solid">
+                                    <input id="update_device_serial_number" type="text" class="form-control form-control-solid deviceUpdateInput">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-5">
+                            <div class="col-xl-3 mt-3">
+                                <label for="update_device_ip_address" class="font-weight-bolder">IP Adresi</label>
+                            </div>
+                            <div class="col-xl-9">
+                                <div class="form-group">
+                                    <input id="update_device_ip_address" type="text" class="form-control form-control-solid deviceUpdateInput">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-5">
+                            <div class="col-xl-3 mt-3">
+                                <label for="update_device_description" class="font-weight-bolder">Açıklama</label>
+                            </div>
+                            <div class="col-xl-9">
+                                <div class="form-group">
+                                    <textarea id="update_device_description" class="form-control form-control-solid deviceUpdateInput" rows="4"></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="text-center">
                         <button type="button" data-bs-dismiss="modal" class="btn btn-light me-3">Vazgeç</button>
-                        <button type="button" class="btn btn-success" id="CreateDeviceButton">Oluştur</button>
+                        <button type="button" class="btn btn-success" id="UpdateDeviceButton">Güncelle</button>
                     </div>
                 </div>
             </div>

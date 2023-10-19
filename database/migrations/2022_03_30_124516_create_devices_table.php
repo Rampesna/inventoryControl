@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->string('model')->nullable();
             $table->string('serial_number')->nullable();
             $table->string('ip_address')->nullable();
+            $table->text('description')->nullable();
             $table->boolean('active')->default(1);
             $table->timestamps();
             $table->softDeletes();

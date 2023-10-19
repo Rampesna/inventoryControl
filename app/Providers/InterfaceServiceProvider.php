@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 
+use App\Interfaces\Eloquent\IDeviceActivityService;
 use App\Interfaces\Eloquent\IDeviceCategoryService;
 use App\Interfaces\Eloquent\IDevicePackageService;
 use App\Interfaces\Eloquent\IDeviceService;
@@ -10,6 +11,7 @@ use App\Interfaces\Eloquent\IDeviceStatusService;
 use App\Interfaces\Eloquent\IEmployeeService;
 use App\Interfaces\Eloquent\IPersonalAccessTokenService;
 use App\Interfaces\Eloquent\IUserService;
+use App\Services\Eloquent\DeviceActivityService;
 use App\Services\Eloquent\DeviceCategoryService;
 use App\Services\Eloquent\DevicePackageService;
 use App\Services\Eloquent\DeviceService;
@@ -35,6 +37,7 @@ class InterfaceServiceProvider extends ServiceProvider
         $this->app->bind(IDeviceStatusService::class, DeviceStatusService::class);
         $this->app->bind(IDeviceService::class, DeviceService::class);
         $this->app->bind(IDevicePackageService::class, DevicePackageService::class);
+        $this->app->bind(IDeviceActivityService::class, DeviceActivityService::class);
     }
 
     /**

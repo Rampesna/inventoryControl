@@ -7,6 +7,8 @@
 
     var devices = $('#devices');
 
+    var qrPrinterDiv = $('#qrPrinter');
+
     var page = $('#page');
     var pageUpButton = $('#pageUp');
     var pageDownButton = $('#pageDown');
@@ -24,10 +26,12 @@
 
     var createDeviceCategoryId = $('#create_device_category_id');
     var createDeviceStatusId = $('#create_device_status_id');
+    var createDevicePackageId = $('#create_device_package_id');
     var createDeviceEmployeeId = $('#create_device_employee_id');
 
     var updateDeviceCategoryId = $('#update_device_category_id');
     var updateDeviceStatusId = $('#update_device_status_id');
+    var updateDevicePackageId = $('#update_device_package_id');
     var updateDeviceEmployeeId = $('#update_device_employee_id');
 
     function createDevice() {
@@ -39,12 +43,38 @@
         $('#create_device_model').val('');
         $('#create_device_serial_number').val('');
         $('#create_device_ip_address').val('');
+        $('#create_device_description').val('');
         $('#CreateDeviceModal').modal('show');
     }
 
     function createQrForDevice(deviceId) {
-        $('#DeviceQrModal').modal('show');
-        $('#qrcode').empty().qrcode(deviceId.toString());
+        $.ajax({
+            type: 'get',
+            url: '{{ route('user.api.device.getById') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {
+                id: deviceId
+            },
+            success: function (response) {
+                $('#DeviceQrModal').modal('show');
+                $('#qrcode').empty().qrcode(deviceId.toString());
+                $('#qr_device_name').text(`${response.response.name}${response.response.package ? ` - ${response.response.package.name}` : ``}`);
+                $('#qr_device_serial').text(response.response.serial_number);
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Cihazlar Bilgisi Alınırken Serviste Bir Sorun Oluştu.');
+                $('#loader').hide();
+            }
+        });
+    }
+
+    function history(id) {
+        var base64EncodedId = btoa(id);
+        window.open('{{ route('user.web.inventory.device.history') }}/' + base64EncodedId, '_blank');
     }
 
     function updateDevice(id) {
@@ -69,6 +99,7 @@
                 $('#update_device_model').val(response.response.model);
                 $('#update_device_serial_number').val(response.response.serial_number);
                 $('#update_device_ip_address').val(response.response.ip_address);
+                $('#update_device_description').val(response.response.description);
                 $('#UpdateDeviceModal').modal('show');
                 $('#loader').hide();
             },
@@ -85,7 +116,7 @@
         $('#DeleteDeviceModal').modal('show');
     }
 
-    function getEmployeesByCompanyIds() {
+    function getEmployees() {
         $.ajax({
             type: 'get',
             url: '{{ route('user.api.employee.getAll') }}',
@@ -198,6 +229,46 @@
         });
     }
 
+    function getDevicePackages() {
+        $.ajax({
+            type: 'get',
+            url: '{{ route('user.api.devicePackage.getAll') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {},
+            success: function (response) {
+                createDevicePackageId.empty();
+                updateDevicePackageId.empty();
+                createDevicePackageId.append($('<option>', {
+                    value: 0,
+                    text: '- Grup Yok -'
+                }));
+                updateDevicePackageId.append($('<option>', {
+                    value: 0,
+                    text: '- Grup Yok -'
+                }));
+                $.each(response.response, function (i, devicePackage) {
+                    createDevicePackageId.append($('<option>', {
+                        value: devicePackage.id,
+                        text: devicePackage.name
+                    }));
+                    updateDevicePackageId.append($('<option>', {
+                        value: devicePackage.id,
+                        text: devicePackage.name
+                    }));
+                });
+                createDevicePackageId.val('').trigger('change');
+                updateDevicePackageId.val('').trigger('change');
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Cihaz Grupları Alınırken Serviste Bir Sorun Oluştu!');
+            }
+        });
+    }
+
     function getDevices() {
         $('#loader').show();
         var pageIndex = parseInt(page.html()) - 1;
@@ -226,7 +297,7 @@
                 $('#startCountSpan').text(parseInt(((pageIndex) * pageSize)) + 1);
                 $('#endCountSpan').text(parseInt(parseInt(((pageIndex) * pageSize)) + 1) + parseInt(pageSize) > response.response.totalCount ? response.response.totalCount : parseInt(((pageIndex) * pageSize)) + 1 + parseInt(pageSize));
                 $.each(response.response.devices, function (i, device) {
-                    devices.append(`
+                    devices.a12345ppend(`
                     <tr>
                         <td>
                             <div class="dropdown">
@@ -239,6 +310,8 @@
                                     <a class="dropdown-item cursor-pointer mb-2 py-3 ps-6" onclick="createQrForDevice(${device.id})" title="QR Kod"><i class="fas fa-qrcode me-2 text-dark"></i> <span class="text-dark">QR Kod</span></a>
                                     ` : ``}
                                     ${deletePermission === 'true' ? `
+                                    <hr class="text-muted">
+                                    <a class="dropdown-item cursor-pointer mb-2 py-3 ps-6" onclick="history(${device.id})" title="QR Kod"><i class="fas fa-history me-2 text-info"></i> <span class="text-info">İşlem Geçmişi</span></a>
                                     <hr class="text-muted">
                                     <a class="dropdown-item cursor-pointer py-3 ps-6" onclick="deleteDevice(${device.id})" title="Sil"><i class="fas fa-trash-alt me-3 text-danger"></i> <span class="text-dark">Sil</span></a>
                                     ` : ``}
@@ -272,6 +345,9 @@
                         <td>
                             ${device.ip_address ?? ''}
                         </td>
+                        <td>
+                            ${device.description ?? ''}
+                        </td>
                     </tr>
                     `);
                 });
@@ -292,9 +368,10 @@
         });
     }
 
-    getEmployeesByCompanyIds();
+    getEmployees();
     getDeviceCategories();
     getDeviceStatuses();
+    getDevicePackages();
     getDevices();
 
     keywordFilter.on('keypress', function (e) {
@@ -341,11 +418,13 @@
         var employeeId = createDeviceEmployeeId.val();
         var categoryId = createDeviceCategoryId.val();
         var statusId = createDeviceStatusId.val();
+        var packageId = createDevicePackageId.val();
         var name = $('#create_device_name').val();
         var brand = $('#create_device_brand').val();
         var model = $('#create_device_model').val();
         var serialNumber = $('#create_device_serial_number').val();
         var ipAddress = $('#create_device_ip_address').val();
+        var description = $('#create_device_description').val();
 
         if (!categoryId) {
             toastr.warning('Kategori Seçimi Zorunludur!');
@@ -366,11 +445,13 @@
                     employeeId: parseInt(employeeId) === 0 ? null : employeeId,
                     categoryId: categoryId,
                     statusId: statusId,
+                    packageId: packageId,
                     name: name,
                     brand: brand,
                     model: model,
                     serialNumber: serialNumber,
                     ipAddress: ipAddress,
+                    description: description,
                 },
                 success: function () {
                     toastr.success('Cihaz Başarıyla Oluşturuldu!');
@@ -392,11 +473,13 @@
         var employeeId = updateDeviceEmployeeId.val();
         var categoryId = updateDeviceCategoryId.val();
         var statusId = updateDeviceStatusId.val();
+        var packageId = updateDevicePackageId.val();
         var name = $('#update_device_name').val();
         var brand = $('#update_device_brand').val();
         var model = $('#update_device_model').val();
         var serialNumber = $('#update_device_serial_number').val();
         var ipAddress = $('#update_device_ip_address').val();
+        var description = $('#update_device_description').val();
 
         if (!categoryId) {
             toastr.warning('Kategori Seçimi Zorunludur!');
@@ -418,11 +501,13 @@
                     employeeId: parseInt(employeeId) === 0 ? null : employeeId,
                     categoryId: categoryId,
                     statusId: statusId,
+                    packageId: packageId,
                     name: name,
                     brand: brand,
                     model: model,
                     serialNumber: serialNumber,
                     ipAddress: ipAddress,
+                    description: description,
                 },
                 success: function () {
                     toastr.success('Cihaz Başarıyla Güncellendi!');
@@ -465,6 +550,18 @@
                 DeleteDeviceButton.attr('disabled', false).html('Sil');
             }
         });
+    });
+
+    $(document).delegate('.deviceCreateInput', 'keypress', function (e) {
+        if (e.which === 13) {
+            CreateDeviceButton.click();
+        }
+    });
+
+    $(document).delegate('.deviceUpdateInput', 'keypress', function (e) {
+        if (e.which === 13) {
+            UpdateDeviceButton.click();
+        }
     });
 
 </script>

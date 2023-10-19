@@ -165,36 +165,6 @@
         $('#DeleteDevicePackageModal').modal('show');
     }
 
-    function getCompanies() {
-        $.ajax({
-            type: 'get',
-            url: '{{ route('user.api.getCompanies') }}',
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': token
-            },
-            data: {},
-            success: function (response) {
-                createDevicePackageCompanyId.empty();
-                updateDevicePackageCompanyId.empty();
-                $.each(response.response, function (i, company) {
-                    createDevicePackageCompanyId.append($('<option>', {
-                        value: company.id,
-                        text: company.title
-                    }));
-                    updateDevicePackageCompanyId.append($('<option>', {
-                        value: company.id,
-                        text: company.title
-                    }));
-                });
-            },
-            error: function (error) {
-                console.log(error);
-                toastr.error('Şirketler Alınırken Serviste Bir Sorun Oluştu!');
-            }
-        });
-    }
-
     function getDevicePackages() {
         $('#loader').show();
         var pageIndex = parseInt(page.html()) - 1;
@@ -266,7 +236,6 @@
         });
     }
 
-    getCompanies();
     getDevicePackages();
     getDevices();
     getEmployees();
@@ -340,8 +309,14 @@
                 },
                 error: function (error) {
                     console.log(error);
-                    toastr.error('Cihaz Grubu Oluşturulurken Serviste Bir Sorun Oluştu!');
                     CreateDevicePackageButton.attr('disabled', false).html('Oluştur');
+                    if (parseInt(error.status) === 422) {
+                        $.each(error.responseJSON.response, function (i, error) {
+                            toastr.error(error[0]);
+                        });
+                    } else {
+                        toastr.error(error.responseJSON.message);
+                    }
                 }
             });
         }
@@ -466,6 +441,18 @@
                 DeleteDevicePackageButton.attr('disabled', false).html('Sil');
             }
         });
+    });
+
+    $(document).delegate('#create_device_package_name', 'keypress', function (e) {
+        if (e.which === 13) {
+            CreateDevicePackageButton.click();
+        }
+    });
+
+    $(document).delegate('#update_device_package_name', 'keypress', function (e) {
+        if (e.which === 13) {
+            UpdateDevicePackageButton.click();
+        }
     });
 
 </script>

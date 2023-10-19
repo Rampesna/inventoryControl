@@ -1,5 +1,5 @@
-<div class="modal fade show" id="DeviceQrModal" tabindex="-1" aria-modal="true" role="dialog" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered mw-800px">
+<div class="modal fade show" id="DiagramModal" tabindex="-1" aria-modal="true" role="dialog" data-bs-backdrop="static">
+    <div class="modal-dialog modal-fullscreen">
         <div class="modal-content rounded">
             <div class="modal-header pb-0 border-0 justify-content-end">
                 <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
@@ -11,12 +11,22 @@
                     </span>
                 </div>
             </div>
-            <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
+            <div class="modal-body scroll-y px-10 px-lg-15 pt-20 pb-15">
                 <div class="form fv-plugins-bootstrap5 fv-plugins-framework">
+                    <input type="hidden" id="update_diagram_id">
                     <div class="d-flex flex-column mb-8 fv-row fv-plugins-icon-container">
-                        <div class="row mb-5">
-                            <div class="col-xl-12 text-center">
-                                <div id="qrcode"></div>
+                        <div class="row">
+                            <div class="cols-sample-area">
+                                <div class="control_section">
+                                    <div class="symPalette_section">
+                                        <div id="symbolpalette">
+                                        </div>
+                                    </div>
+                                    <div class="middle_section"></div>
+                                    <div class="diagram_section">
+                                        <div id="diagram"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -112,12 +112,14 @@ class DeviceController extends Controller
         $createResponse = $this->deviceService->create(
             $request->categoryId,
             $request->statusId,
+            $request->packageId,
             $request->employeeId,
             $request->name,
             $request->brand,
             $request->model,
             $request->serialNumber,
-            $request->ipAddress
+            $request->ipAddress,
+            $request->description
         );
         if ($createResponse->isSuccess()) {
             return $this->success(
@@ -143,12 +145,14 @@ class DeviceController extends Controller
             $request->id,
             $request->categoryId,
             $request->statusId,
+            $request->packageId,
             $request->employeeId,
             $request->name,
             $request->brand,
             $request->model,
             $request->serialNumber,
-            $request->ipAddress
+            $request->ipAddress,
+            $request->description
         );
         if ($updateResponse->isSuccess()) {
             return $this->success(

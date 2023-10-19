@@ -94,24 +94,28 @@ interface IDeviceService extends IEloquentService
     /**
      * @param int $categoryId
      * @param int $statusId
+     * @param int|null $packageId
      * @param int|null $employeeId
      * @param string|null $name
      * @param string|null $brand
      * @param string|null $model
      * @param string|null $serialNumber
      * @param string|null $ipAddress
+     * @param string|null $description
      *
      * @return \App\Core\ServiceResponse
      */
     public function create(
         int    $categoryId,
         int    $statusId,
+        int    $packageId = null,
         int    $employeeId = null,
         string $name = null,
         string $brand = null,
         string $model = null,
         string $serialNumber = null,
-        string $ipAddress = null
+        string $ipAddress = null,
+        string $description = null
     ): ServiceResponse;
 
     /**
@@ -119,12 +123,14 @@ interface IDeviceService extends IEloquentService
      * @param int $id
      * @param int $categoryId
      * @param int $statusId
+     * @param int|null $packageId
      * @param int|null $employeeId
      * @param string|null $name
      * @param string|null $brand
      * @param string|null $model
      * @param string|null $serialNumber
      * @param string|null $ipAddress
+     * @param string|null $description
      *
      * @return ServiceResponse
      */
@@ -133,11 +139,13 @@ interface IDeviceService extends IEloquentService
         int    $id,
         int    $categoryId,
         int    $statusId,
+        int    $packageId = null,
         int    $employeeId = null,
         string $name = null,
         string $brand = null,
         string $model = null,
         string $serialNumber = null,
-        string $ipAddress = null
+        string $ipAddress = null,
+        string $description = null
     ): ServiceResponse;
 }

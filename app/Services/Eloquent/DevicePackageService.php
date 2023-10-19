@@ -91,7 +91,7 @@ class DevicePackageService implements IDevicePackageService
                 'totalCount' => $devicePackages->count(),
                 'pageIndex' => $pageIndex,
                 'pageSize' => $pageSize,
-                'devicePackages' => $devicePackages->skip($pageSize * $pageIndex)
+                'devicePackages' => $pageSize == -1 ? $devicePackages->get() : $devicePackages->skip($pageSize * $pageIndex)
                     ->take($pageSize)
                     ->get()
             ]
@@ -244,6 +244,16 @@ class DevicePackageService implements IDevicePackageService
         string $name
     ): ServiceResponse
     {
+        $checkDevice = DevicePackage::where('name', $name)->first();
+        if ($checkDevice) {
+            return new ServiceResponse(
+                false,
+                'Device package already exists',
+                409,
+                null
+            );
+        }
+
         $devicePackage = new DevicePackage;
         $devicePackage->name = $name;
         $devicePackage->save();
@@ -269,7 +279,16 @@ class DevicePackageService implements IDevicePackageService
     {
         $devicePackage = $this->getById($id);
         if ($devicePackage->isSuccess()) {
-            $devicePackage->getData()->company_id = $companyId;
+            $checkDeviceName = DevicePackage::where('name', $name)->where('id', '!=', $id)->first();
+            if ($checkDeviceName) {
+                return new ServiceResponse(
+                    false,
+                    'Device package already exists',
+                    409,
+                    null
+                );
+            }
+
             $devicePackage->getData()->name = $name;
             $devicePackage->getData()->save();
 

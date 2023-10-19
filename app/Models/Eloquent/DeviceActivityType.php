@@ -9,4 +9,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class DeviceActivityType extends Model
 {
     use HasFactory, SoftDeletes;
+
+    public function activities()
+    {
+        return $this->hasMany(DeviceActivity::class, 'activity_type_id');
+    }
 }

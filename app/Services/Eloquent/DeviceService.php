@@ -6,6 +6,8 @@ use App\Core\ServiceResponse;
 use App\Interfaces\Eloquent\IDeviceService;
 use App\Models\Eloquent\Device;
 use App\Models\Eloquent\DeviceActivity;
+use App\Models\Eloquent\DeviceCategory;
+use App\Models\Eloquent\DeviceStatus;
 use App\Models\Eloquent\Employee;
 
 class DeviceService implements IDeviceService
@@ -27,7 +29,9 @@ class DeviceService implements IDeviceService
         int $id
     ): ServiceResponse
     {
-        $device = Device::find($id);
+        $device = Device::with([
+            'package'
+        ])->find($id);
         if ($device) {
             return new ServiceResponse(
                 true,
@@ -113,7 +117,7 @@ class DeviceService implements IDeviceService
                 'totalCount' => $devices->count(),
                 'pageIndex' => $pageIndex,
                 'pageSize' => $pageSize,
-                'devices' => $devices->skip($pageSize * $pageIndex)
+                'devices' => $pageSize == -1 ? $devices->get() : $devices->skip($pageSize * $pageIndex)
                     ->take($pageSize)
                     ->get()
             ]
@@ -280,35 +284,41 @@ class DeviceService implements IDeviceService
     /**
      * @param int $categoryId
      * @param int $statusId
+     * @param int|null $packageId
      * @param int|null $employeeId
      * @param string|null $name
      * @param string|null $brand
      * @param string|null $model
      * @param string|null $serialNumber
      * @param string|null $ipAddress
+     * @param string|null $description
      *
      * @return \App\Core\ServiceResponse
      */
     public function create(
         int    $categoryId,
         int    $statusId,
+        int    $packageId = null,
         int    $employeeId = null,
         string $name = null,
         string $brand = null,
         string $model = null,
         string $serialNumber = null,
-        string $ipAddress = null
+        string $ipAddress = null,
+        string $description = null
     ): ServiceResponse
     {
         $device = new Device;
         $device->category_id = $categoryId;
         $device->status_id = $statusId;
+        $device->package_id = $packageId;
         $device->employee_id = $employeeId;
         $device->name = $name;
         $device->brand = $brand;
         $device->model = $model;
         $device->serial_number = $serialNumber;
         $device->ip_address = $ipAddress;
+        $device->description = $description;
         $device->save();
 
         return new ServiceResponse(
@@ -322,29 +332,32 @@ class DeviceService implements IDeviceService
     /**
      * @param int $userId
      * @param int $id
-     * @param int $companyId
      * @param int $categoryId
      * @param int $statusId
+     * @param int|null $packageId
      * @param int|null $employeeId
      * @param string|null $name
      * @param string|null $brand
      * @param string|null $model
      * @param string|null $serialNumber
      * @param string|null $ipAddress
+     * @param string|null $description
      *
-     * @return \App\Core\ServiceResponse
+     * @return ServiceResponse
      */
     public function update(
         int    $userId,
         int    $id,
         int    $categoryId,
         int    $statusId,
+        int    $packageId = null,
         int    $employeeId = null,
         string $name = null,
         string $brand = null,
         string $model = null,
         string $serialNumber = null,
-        string $ipAddress = null
+        string $ipAddress = null,
+        string $description = null
     ): ServiceResponse
     {
         $device = $this->getById($id);
@@ -383,15 +396,40 @@ class DeviceService implements IDeviceService
                     $deviceActivity->description = 'Device unassigned from employee';
                     $deviceActivity->save();
                 }
+            } else if ($employeeId) {
+                $deviceActivity = new DeviceActivity;
+                $deviceActivity->user_id = $userId;
+                $deviceActivity->device_id = $id;
+                $deviceActivity->activity_type_id = 1;
+                $deviceActivity->relation_id = $employeeId;
+                $deviceActivity->relation_type = Employee::class;
+                $deviceActivity->datetime = now();
+                $deviceActivity->description = 'Device assigned to employee';
+                $deviceActivity->save();
             }
+
+            if ($device->getData()->status_id != $statusId) {
+                $deviceActivity = new DeviceActivity;
+                $deviceActivity->user_id = $userId;
+                $deviceActivity->device_id = $id;
+                $deviceActivity->activity_type_id = 3;
+                $deviceActivity->relation_id = $statusId;
+                $deviceActivity->relation_type = DeviceStatus::class;
+                $deviceActivity->datetime = now();
+                $deviceActivity->description = 'Device status changed';
+                $deviceActivity->save();
+            }
+
             $device->getData()->category_id = $categoryId;
             $device->getData()->status_id = $statusId;
+            $device->getData()->package_id = $packageId;
             $device->getData()->employee_id = $employeeId;
             $device->getData()->name = $name;
             $device->getData()->brand = $brand;
             $device->getData()->model = $model;
             $device->getData()->serial_number = $serialNumber;
             $device->getData()->ip_address = $ipAddress;
+            $device->getData()->description = $description;
             $device->getData()->save();
 
             return new ServiceResponse(

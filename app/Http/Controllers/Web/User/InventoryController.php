@@ -8,7 +8,7 @@ class InventoryController extends Controller
 {
     public function index()
     {
-        return view('user.modules.index.index');
+        return view('user.modules.dashboard.index.index');
     }
 
     public function employee()

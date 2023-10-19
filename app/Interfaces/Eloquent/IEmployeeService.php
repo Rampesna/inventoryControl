@@ -12,6 +12,15 @@ interface IEmployeeService extends IEloquentService
     public function getAllWithDevices(): ServiceResponse;
 
     /**
+     * @param int $id
+     *
+     * @return \App\Core\ServiceResponse
+     */
+    public function getByIdWithDevices(
+        int $id
+    ): ServiceResponse;
+
+    /**
      * @param int $otsId
      * @param string $name
      * @param string $email
@@ -37,5 +46,36 @@ interface IEmployeeService extends IEloquentService
         int   $userId,
         int   $employeeId,
         array $deviceIds
+    ): ServiceResponse;
+
+    /**
+     * @param int $userId
+     * @param int $employeeId
+     * @param array $deviceIds
+     *
+     * @return \App\Core\ServiceResponse
+     */
+    public function removeDevices(
+        int   $userId,
+        int   $employeeId,
+        array $deviceIds
+    ): ServiceResponse;
+
+    /**
+     * @param int $otsId
+     *
+     * @return \App\Core\ServiceResponse
+     */
+    public function deleteByOtsId(
+        int $otsId
+    ): ServiceResponse;
+
+    /**
+     * @param int $otsId
+     *
+     * @return \App\Core\ServiceResponse
+     */
+    public function reActivateByOtsId(
+        int $otsId
     ): ServiceResponse;
 }

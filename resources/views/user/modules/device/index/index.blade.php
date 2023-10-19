@@ -15,10 +15,10 @@
 
 @section('content')
 
-    @include('user.modules.device.modals.createDevice')
-    @include('user.modules.device.modals.updateDevice')
-    @include('user.modules.device.modals.deleteDevice')
-    @include('user.modules.device.modals.deviceQr')
+    @include('user.modules.device.index.modals.createDevice')
+    @include('user.modules.device.index.modals.updateDevice')
+    @include('user.modules.device.index.modals.deleteDevice')
+    @include('user.modules.device.index.modals.deviceQr')
 
     <div class="row">
         <div class="col-xl-8 mb-5">
@@ -87,6 +87,9 @@
                                         <option value="10">10</option>
                                         <option value="25">25</option>
                                         <option value="50">50</option>
+                                        <option value="250">250</option>
+                                        <option value="500">500</option>
+                                        <option value="-1">Tümü</option>
                                     </select>
                                 </label>
                             </div>
@@ -119,6 +122,7 @@
                             <th class="hideIfMobile">Marka</th>
                             <th class="hideIfMobile">Model</th>
                             <th class="hideIfMobile">IP</th>
+                            <th class="hideIfMobile">Açıklama</th>
                         </tr>
                         </thead>
                         <tbody class="fw-bold text-gray-600" id="devices"></tbody>
@@ -138,9 +142,9 @@
 @endsection
 
 @section('customStyles')
-    @include('user.modules.device.components.style')
+    @include('user.modules.device.index.components.style')
 @endsection
 
 @section('customScripts')
-    @include('user.modules.device.components.script')
+    @include('user.modules.device.index.components.script')
 @endsection

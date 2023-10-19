@@ -29,8 +29,13 @@ Route::middleware([
     Route::prefix('employee')->group(function () {
         Route::get('getAll', [\App\Http\Controllers\Api\User\EmployeeController::class, 'getAll'])->name('user.api.employee.getAll');
         Route::get('getAllWithDevices', [\App\Http\Controllers\Api\User\EmployeeController::class, 'getAllWithDevices'])->name('user.api.employee.getAllWithDevices');
+        Route::get('getByIdWithDevices', [\App\Http\Controllers\Api\User\EmployeeController::class, 'getByIdWithDevices'])->name('user.api.employee.getByIdWithDevices');
         Route::post('create', [\App\Http\Controllers\Api\User\EmployeeController::class, 'create'])->name('user.api.employee.create');
         Route::post('setDevices', [\App\Http\Controllers\Api\User\EmployeeController::class, 'setDevices'])->name('user.api.employee.setDevices');
+        Route::post('removeDevices', [\App\Http\Controllers\Api\User\EmployeeController::class, 'removeDevices'])->name('user.api.employee.removeDevices');
+        Route::delete('delete', [\App\Http\Controllers\Api\User\EmployeeController::class, 'delete'])->name('user.api.employee.delete');
+        Route::delete('deleteByOtsId', [\App\Http\Controllers\Api\User\EmployeeController::class, 'deleteByOtsId'])->name('user.api.employee.deleteByOtsId');
+        Route::post('reActivateByOtsId', [\App\Http\Controllers\Api\User\EmployeeController::class, 'reActivateByOtsId'])->name('user.api.employee.reActivateByOtsId');
     });
 
     Route::prefix('device')->group(function () {
@@ -68,5 +73,9 @@ Route::middleware([
         Route::post('create', [\App\Http\Controllers\Api\User\DevicePackageController::class, 'create'])->name('user.api.devicePackage.create');
         Route::put('update', [\App\Http\Controllers\Api\User\DevicePackageController::class, 'update'])->name('user.api.devicePackage.update');
         Route::delete('delete', [\App\Http\Controllers\Api\User\DevicePackageController::class, 'delete'])->name('user.api.devicePackage.delete');
+    });
+
+    Route::prefix('deviceActivity')->group(function () {
+        Route::get('getByDeviceId', [\App\Http\Controllers\Api\User\DeviceActivityController::class, 'getByDeviceId'])->name('user.api.deviceActivity.getByDeviceId');
     });
 });
